@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 
     private static Main instance;
-    private ScoreboardManager scoreboardManager;
+    private ArcxScoreboardManager scoreboardManager;
 
     @Override
     public void onEnable() {
@@ -19,7 +19,7 @@ public class Main extends JavaPlugin {
             return;
         }
 
-        scoreboardManager = new ScoreboardManager(this);
+        scoreboardManager = new ArcxScoreboardManager(this);
         scoreboardManager.start();
     }
 
