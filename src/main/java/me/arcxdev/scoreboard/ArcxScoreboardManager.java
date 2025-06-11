@@ -8,16 +8,15 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
 
 import java.util.*;
 
-public class ScoreboardManager {
+public class ArcxScoreboardManager {
 
     private final Main plugin;
     private final Map<Player, Scoreboard> playerBoards = new HashMap<>();
 
-    public ScoreboardManager(Main plugin) {
+    public ArcxScoreboardManager(Main plugin) {
         this.plugin = plugin;
     }
 
@@ -43,8 +42,8 @@ public class ScoreboardManager {
         List<String> lines = worldConfig.getStringList("lines");
         String title = PlaceholderAPI.setPlaceholders(player, worldConfig.getString("title", ""));
 
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        Scoreboard board = manager.getNewScoreboard();
+        ScoreboardManager bukkitManager = Bukkit.getScoreboardManager();
+        Scoreboard board = bukkitManager.getNewScoreboard();
         Objective obj = board.registerNewObjective("dummy", "dummy");
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         obj.setDisplayName(title);
