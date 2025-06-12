@@ -4,3 +4,13 @@ main: me.arcxdev.scoreboard.Main
 api-version: 1.8
 author: ArcxDevelopments
 depend: [PlaceholderAPI]
+
+commands:
+  arcxreload:
+    description: Reload the scoreboard configuration
+    permission: arcxscoreboard.reload
+
+permissions:
+  arcxscoreboard.reload:
+    description: Allows reloading the scoreboard
+    default: op

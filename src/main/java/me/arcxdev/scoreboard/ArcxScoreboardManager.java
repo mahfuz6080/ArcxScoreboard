@@ -4,24 +4,20 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.*;
 
 import java.util.*;
 
 public class ArcxScoreboardManager {
 
     private final Main plugin;
-    private final Map<Player, Scoreboard> playerBoards = new HashMap<>();
 
     public ArcxScoreboardManager(Main plugin) {
         this.plugin = plugin;
     }
 
     public void start() {
-        Bukkit.getScheduler().runTaskTimer(plugin, this::updateScoreboards, 0L, 40L); // 2 seconds
+        Bukkit.getScheduler().runTaskTimer(plugin, this::updateScoreboards, 0L, 40L); // every 2 seconds
     }
 
     private void updateScoreboards() {
@@ -31,20 +27,19 @@ public class ArcxScoreboardManager {
     }
 
     private void updateBoard(Player player) {
-        String worldName = player.getWorld().getName();
-        ConfigurationSection worldConfig = plugin.getConfig().getConfigurationSection("worlds." + worldName);
+        String world = player.getWorld().getName();
+        ConfigurationSection section = plugin.getConfig().getConfigurationSection("worlds." + world);
 
-        if (worldConfig == null || !worldConfig.getBoolean("enabled")) {
+        if (section == null || !section.getBoolean("enabled")) {
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
             return;
         }
 
-        List<String> lines = worldConfig.getStringList("lines");
-        String title = PlaceholderAPI.setPlaceholders(player, worldConfig.getString("title", ""));
+        List<String> lines = section.getStringList("lines");
+        String title = PlaceholderAPI.setPlaceholders(player, section.getString("title"));
 
-        ScoreboardManager bukkitManager = Bukkit.getScoreboardManager();
-        Scoreboard board = bukkitManager.getNewScoreboard();
-        Objective obj = board.registerNewObjective("dummy", "dummy");
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        Objective obj = scoreboard.registerNewObjective("dummy", "dummy");
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         obj.setDisplayName(title);
 
@@ -52,11 +47,11 @@ public class ArcxScoreboardManager {
         Set<String> used = new HashSet<>();
         for (String rawLine : lines) {
             String line = PlaceholderAPI.setPlaceholders(player, rawLine);
-            while (used.contains(line)) line += "§r"; // Prevent duplicate lines
+            while (used.contains(line)) line += "§r";
             used.add(line);
             obj.getScore(line).setScore(score--);
         }
 
-        player.setScoreboard(board);
+        player.setScoreboard(scoreboard);
     }
 }

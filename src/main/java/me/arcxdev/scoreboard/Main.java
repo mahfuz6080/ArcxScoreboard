@@ -1,6 +1,9 @@
 package me.arcxdev.scoreboard;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -21,6 +24,25 @@ public class Main extends JavaPlugin {
 
         scoreboardManager = new ArcxScoreboardManager(this);
         scoreboardManager.start();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!(sender instanceof Player)) return false;
+        Player player = (Player) sender;
+
+        if (cmd.getName().equalsIgnoreCase("arcxreload")) {
+            if (player.hasPermission("arcxscoreboard.reload")) {
+                reloadConfig();
+                scoreboardManager.start();
+                player.sendMessage("§aArcxScoreboard reloaded.");
+            } else {
+                player.sendMessage("§cYou don't have permission.");
+            }
+            return true;
+        }
+
+        return false;
     }
 
     public static Main getInstance() {
