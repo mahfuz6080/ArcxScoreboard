@@ -38,7 +38,12 @@
       <systemPath>${project.basedir}/libs/PlaceholderAPI-2.10.10.jar</systemPath>
     </dependency>
   </dependencies>
-
+<distributionManagement>
+  <repository>
+    <id>github</id>
+    <url>https://maven.pkg.github.com/mahfuz6080/ArcxScoreboard</url>
+  </repository>
+</distributionManagement>
   <build>
     <plugins>
       <!-- Java compiler -->
