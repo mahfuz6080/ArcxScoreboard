@@ -5,7 +5,6 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
   workflow_dispatch:
 
 permissions:
@@ -18,17 +17,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Set up JDK 8
       uses: actions/setup-java@v3
       with:
         java-version: '8'
         distribution: 'temurin'
         cache: maven
-
-    - name: Install Spigot Build tools (1.8.8)
-      uses: SpraxDev/Action-SpigotMC@v4
-      with:
-        versions: 1.8.8
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
@@ -38,10 +33,10 @@ jobs:
       run: |
         COMMIT_MESSAGE=$(git log -1 --pretty=%B | tr -d '\n')
         COMMIT_HASH=$(git rev-parse --short HEAD)
-        echo "::set-output name=release_tag::${COMMIT_HASH}"
-        echo "::set-output name=commit_message::${COMMIT_MESSAGE}"
+        echo "release_tag=${COMMIT_HASH}" >> "$GITHUB_OUTPUT"
+        echo "commit_message=${COMMIT_MESSAGE}" >> "$GITHUB_OUTPUT"
 
-    - name: Exclude JAR with "original" in the name
+    - name: Exclude JAR with \"original\" in the name
       run: |
         mkdir -p filtered-target
         find target/ -type f -name "*.jar" ! -name "*original*.jar" -exec cp {} filtered-target/ \;
@@ -49,13 +44,9 @@ jobs:
     - name: Add filtered Jar to GitHub releases
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
-        repo_token: "${{ secrets.REPO_TOKEN }}"
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "${{ steps.tag.outputs.release_tag }}"
         prerelease: false
         title: "Release [${{ steps.tag.outputs.release_tag }}]: ${{ steps.tag.outputs.commit_message }}"
         files: |
           filtered-target/*.jar
-
-
-
-
