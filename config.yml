@@ -1,15 +1,14 @@
-# Scoreboard visibility per world
 worlds:
-  lobby:
+  world:
     enabled: true
     title: "&6&lArcx &e&lLobby"
     lines:
       - "&7Welcome, &f%player_name%"
-      - ""
+      - "&7Ping: &f%player_ping%"
       - "&eRank: &f%vault_prefix%"
       - "&eCoins: &f%vault_eco_balance%"
       - "&eOnline: &f%server_online%"
+      - "&eTPS: &f%server_tps_1_colored%"
+      - "&eTime Played: &f%statistic_time_played%"
       - ""
       - "&6play.arcxdev.net"
-  world:
-    enabled: false
