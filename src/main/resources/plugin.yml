@@ -1,5 +1,6 @@
 name: ArcxScoreboard
 version: 1.0
-main: me.arcxdev.ArcxScoreboard
+main: me.arcxdev.scoreboard.Main
 api-version: 1.8
+author: ArcxDevelopments
 depend: [PlaceholderAPI]
