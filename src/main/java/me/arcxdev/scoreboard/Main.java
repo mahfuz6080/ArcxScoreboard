@@ -6,6 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+
 public class Main extends JavaPlugin {
 
     private static Main instance;
@@ -16,6 +20,13 @@ public class Main extends JavaPlugin {
         instance = this;
         saveDefaultConfig();
 
+        String licenseKey = getConfig().getString("license");
+        if (!checkLicense(licenseKey)) {
+            getLogger().severe("Invalid license key! Disabling plugin.");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) {
             getLogger().severe("PlaceholderAPI is not installed! Disabling plugin.");
             getServer().getPluginManager().disablePlugin(this);
@@ -24,6 +35,19 @@ public class Main extends JavaPlugin {
 
         scoreboardManager = new ArcxScoreboardManager(this);
         scoreboardManager.start();
+    }
+
+    private boolean checkLicense(String key) {
+        try {
+            URL url = new URL("https://legitpixel.infinityfreeapp.com/licence.php?key=" + key);
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            String response = in.readLine().trim();
+            in.close();
+            return response.equalsIgnoreCase("VALID");
+        } catch (Exception e) {
+            getLogger().severe("Could not contact license server: " + e.getMessage());
+            return false;
+        }
     }
 
     @Override
