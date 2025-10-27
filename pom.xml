@@ -10,28 +10,20 @@
   <packaging>jar</packaging>
 
   <name>ArcxScoreboard</name>
-  <description>Hypixel-style scoreboard plugin with PlaceholderAPI support</description>
+  <description>Hypixel-style scoreboard plugin</description>
 
   <repositories>
-    <!-- Spigot API -->
+    <repository>
+      <id>papermc-repo</id>
+      <url>https://repo.papermc.io/repository/maven-public/</url>
+    </repository>
     <repository>
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
-  <repository>
-    <id>papermc-repo</id>
-    <url>https://repo.papermc.io/repository/maven-public/</url>
-  </repository>
-  
-  <repository>
-    <id>spigot-repo</id>
-    <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-  </repository>
-</repositories>
   </repositories>
 
   <dependencies>
-    <!-- Spigot API -->
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
@@ -39,7 +31,13 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- PlaceholderAPI (local jar in libs/) -->
+    <dependency>
+      <groupId>net.md-5</groupId>
+      <artifactId>bungeecord-chat</artifactId>
+      <version>1.8-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>me.clip</groupId>
       <artifactId>placeholderapi</artifactId>
@@ -48,15 +46,9 @@
       <systemPath>${project.basedir}/libs/PlaceholderAPI-2.10.10.jar</systemPath>
     </dependency>
   </dependencies>
-<distributionManagement>
-  <repository>
-    <id>github</id>
-    <url>https://maven.pkg.github.com/mahfuz6080/ArcxScoreboard</url>
-  </repository>
-</distributionManagement>
+
   <build>
     <plugins>
-      <!-- Java compiler -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
