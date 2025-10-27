@@ -1,12 +1,13 @@
 package me.arcxdev.scoreboard;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ArcxScoreboardManager {
 
@@ -17,7 +18,7 @@ public class ArcxScoreboardManager {
     }
 
     public void start() {
-        Bukkit.getScheduler().runTaskTimer(plugin, this::updateScoreboards, 0L, 40L); // every 2 seconds
+        Bukkit.getScheduler().runTaskTimer(plugin, this::updateScoreboards, 0L, 40L); // every 2s
     }
 
     private void updateScoreboards() {
@@ -27,31 +28,42 @@ public class ArcxScoreboardManager {
     }
 
     private void updateBoard(Player player) {
-        String world = player.getWorld().getName();
-        ConfigurationSection section = plugin.getConfig().getConfigurationSection("worlds." + world);
-
-        if (section == null || !section.getBoolean("enabled")) {
-            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-            return;
-        }
-
-        List<String> lines = section.getStringList("lines");
-        String title = PlaceholderAPI.setPlaceholders(player, section.getString("title"));
-
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective obj = scoreboard.registerNewObjective("dummy", "dummy");
-        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        obj.setDisplayName(title);
+        Objective objective = scoreboard.registerNewObjective("sidebar", "dummy");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        objective.setDisplayName(color("&e&lLEGITPIXEL &7Network"));
+
+        // ⛏️ Example variables from another class (replace with your own)
+        PlayerData data = PlayerData.get(player); // Your custom player data class
+        String rank = data.getRank();
+        int coins = data.getCoins();
+        int kills = data.getKills();
+        String world = player.getWorld().getName();
+
+        // 🟡 Hardcoded Hypixel-like scoreboard
+        List<String> lines = List.of(
+                "&7",
+                "&fRank: " + rank,
+                "&fCoins: &6" + coins,
+                "&fKills: &c" + kills,
+                "&fWorld: &a" + world,
+                "&r",
+                "&ewww.legitpixel.fun"
+        );
 
         int score = lines.size();
         Set<String> used = new HashSet<>();
         for (String rawLine : lines) {
-            String line = PlaceholderAPI.setPlaceholders(player, rawLine);
-            while (used.contains(line)) line += "§r";
+            String line = color(rawLine);
+            while (used.contains(line)) line += ChatColor.RESET; // avoid duplicates
             used.add(line);
-            obj.getScore(line).setScore(score--);
+            objective.getScore(line).setScore(score--);
         }
 
         player.setScoreboard(scoreboard);
+    }
+
+    private String color(String text) {
+        return ChatColor.translateAlternateColorCodes('&', text);
     }
 }
